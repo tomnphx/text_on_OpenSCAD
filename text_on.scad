@@ -104,11 +104,11 @@ function rotation_for_character(size, spacing, r, rotate = 0) = (width_of_text_c
 
 
 //Rotate 1/2 width of text if centering    
-//One less -- if we have a single char we are already centred..
+//One less -- if we have a single char we are already centered.
 function rotation_for_center_text_string(t, size, spacing, r, rotate, center) = (center) ? (width_of_text_string_num_length(len(t) - 1, size, spacing) / 2 / (internal_pi2 * r) * 360) : 0;
 
 //Rotate according to rotate and if centred text also 1/2 width of text
-function rotation_for_center_text_string_and_rotate(t, size, spacing,r,rotate,center) = ((center) ? (width_of_text_string(t, size, spacing) / 2 / (internal_pi2 * r) * 360) : 1) * (1 - abs(rotate) / 90);
+function rotation_for_center_text_string_and_rotate(t, size, spacing, r, rotate,center) = ((center) ? (width_of_text_string(t, size, spacing) / 2 / (internal_pi2 * r) * 360) : 1) * (1 - abs(rotate) / 90);
 
 
 //---- Text on Object Functions ----
