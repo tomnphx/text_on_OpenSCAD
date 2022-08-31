@@ -239,7 +239,7 @@ module text_on_circle(t = default_t,
 //    echo (str("text_on_circle:","rotate=" , rotate));
 //    echo (str("text_on_circle:","eastwest=" , eastwest));
 
-    if((halign != undef) || (halign != undef)) {
+    if((halign != undef) || (valign != undef)) {
         echo(str("text_on_circle:","WARNING " , "halign and valign are NOT supported."));
     }
 
@@ -664,4 +664,3 @@ module text_extrude( t = default_t,
             language = language,
             script = script);
 }
-
