@@ -79,7 +79,7 @@ default_cylinder_updown = 0;
 
 // Internal values - don't play with these :)
 // This is much more accurate than the PI constant internal to Openscad.
-internal_pi = 3.1415926535897932384626433832795028841971693993751058209;
+internal_pi = PI;
 internal_pi2 = internal_pi * 2;
 
 // Internal values - You might want to play with these if you are using a proportional font
