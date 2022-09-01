@@ -104,12 +104,11 @@ function rotation_for_character(size, spacing, r, rotate = 0) = (width_of_text_c
 
 
 //Rotate 1/2 width of text if centering    
-//One less -- if we have a single char we are already centered.
+//One less -- if we have a single char we are already centred.
 function rotation_for_center_text_string(t, size, spacing, r, rotate, center) = (center) ? (width_of_text_string_num_length(len(t) - 1, size, spacing) / 2 / (internal_pi2 * r) * 360) : 0;
 
 //Rotate according to rotate and if centred text also 1/2 width of text
-function rotation_for_center_text_string_and_rotate(t, size, spacing, r, rotate,center) = ((center) ? (width_of_text_string(t, size, spacing) / 2 / (internal_pi2 * r) * 360) : 1) * (1 - abs(rotate) / 90);
-
+function rotation_for_center_text_string_and_rotate(t, size, spacing, r, rotate, center) = ((center) ? (width_of_text_string(t, size, spacing) / 2 / (internal_pi2 * r) * 360) : 1) * (1 - abs(rotate) / 90);
 
 //---- Text on Object Functions ----
 //Text on the top or side of a cylinder.
@@ -117,7 +116,7 @@ function rotation_for_center_text_string_and_rotate(t, size, spacing, r, rotate,
 //cylinder(h,r,center)
 //cylinder(h,r1,r2,center)
 module text_on_cylinder(t = default_t,
-                        //Object-specific                        
+                        //Object-specific
                         locn_vec = [0,0,0],
                         r,
                         r1,
@@ -151,7 +150,7 @@ module text_on_cylinder(t = default_t,
 //    echo (str("text_on_cylinder:","r1=" , r1));
 //    echo (str("text_on_cylinder:","r2=" , r2));
 
-    if((halign != undef) || (halign != undef)) {
+    if((halign != undef) || (valign != undef)) {
         echo(str("text_on_cylinder:","WARNING " , "halign and valign are NOT supported."));
     }
 
@@ -183,8 +182,8 @@ module text_on_cylinder(t = default_t,
             //TODO: Which side things aren't supported on the circle
             echo(str("text_on_cylinder:","WARNING " , "middle NOT supported for the SIDE of a cylinder."));
         }
-        //Work on the side
-        locn_offset_vec = (cylinder_center == true) ? [0, 0, 0] : [0, 0, h / 2]; 
+        //Work on the side       
+        locn_offset_vec = (cylinder_center == true) ? [0, 0, 0] : [0, 0, h / 2];
         rotate(-rtl_sign * rotation_for_center_text_string_and_rotate(t, size, spacing, r, rotate, center), [0, 0, 1])
         translate(locn_vec + locn_offset_vec)
         __internal_text_on_cylinder_side(t,
@@ -348,12 +347,16 @@ module __internal_text_on_cylinder_side(t = default_t,
     ddirection = ((r == undef) && ((direction == "ttb") || (direction == "btt"))) ? "ltr" : direction; //We don't do ttb or btt directions on slanty
     rtl_sign = (ddirection == "rtl") ? -1 : 1;
 
-        //This code takes care of slanty cylinders and "normal" cylinders
+    //Adjust text to center on the cylinder if more than 1 character
+    //need to wrap this in the center command, works with shorter cylinders.
+    eastwest = (len(t) > 1) ? eastwest - asin(wid/rr1)/2 : eastwest;
+    
+    //This code takes care of slanty cylinders and "normal" cylinders
     translate([0, 0, updown])
     rotate(eastwest, [0, 0, 1])
     for(l = [0 : len(t) - 1]) {
         //TODO: TTB and BTT need to have a different concept of path/length than this for RTL/LTR
-           //width_of_... is half a char too long -- add 0.5 (counting from zero)
+        //width_of_... is half a char too long -- add 0.5 (counting from zero)
         length_to_center_of_char = width_of_text_string_num_length(l + 0.5, size, spacing);
         radius_here = calc_radius_at_length(rr1, rr2, h, length_to_center_of_char, rotate, updown);
         //Rotating into position and tangentially to surface -- Don't rotate per character for ttb/btt
@@ -364,7 +367,7 @@ module __internal_text_on_cylinder_side(t = default_t,
             //Offset per character to go up/down the side in ttb/btt -- TTB down, BTT up
             vert_z_char_offset = (ddirection == "ttb" || ddirection == "btt") ?  (l * size * ((ddirection == "ttb") ? -1 : 1 )) :  0 ;
             //Only if RTL/LTR and if center -- center the text (starts off in a more visually appealing location)
-            vert_z_half_text_offset_tmp = (len(t) -1) / 2 * (rotate / 90 * wid);
+            vert_z_half_text_offset_tmp = (len(t) -1) / 2 * (rotate / 90 * wid);           
             vert_z_half_text_offset = ((ddirection == "ttb" || ddirection == "btt") || (ccenter == false)) ? 0 : vert_z_half_text_offset_tmp;
             translate([ radius_here , 0, vert_z_char_offset - l * (rotate / 90 * wid) + vert_z_half_text_offset])
 
